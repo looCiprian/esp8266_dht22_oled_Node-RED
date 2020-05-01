@@ -1,5 +1,5 @@
 # Wemos D1 mini (esp8266) + dht22 + oled + Node-RED
-A program to display temperature, humidity, heat temperature, temperature graph and humidity graph on the Oled Display. Furthermode, thanks to the WiFi module it is possible to send and recieve information to and from mqtt server in order to display temperature, humidity, heat and control the relè using Node-RED web page.
+A program to display temperature, humidity, heat temperature, temperature graph and humidity graph on the Oled Display. Furthermode, thanks to the WiFi module it is possible to send and receive information to and from mqtt server in order to display temperature, humidity, heat and control the relè using Node-RED web page.
 
 ## Hardware
 1. Wemos d1 mini
