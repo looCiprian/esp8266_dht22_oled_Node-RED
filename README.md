@@ -1,2 +1,34 @@
-# esp8266_dht22_oled_Node-RED
-Using wemos D1 mini, oled and Node-RED to display temp, hum, heat and time.
+# Wemos D1 mini (esp8266) + dht22 + oled + Node-RED
+A program to display temperature, humidity, heat temperature, temperature graph and humidity graph on the Oled Display. Furthermode, thanks to the WiFi module it is possible to send and recieve information to and from mqtt server in order to display temperature, humidity, heat and control the relè using Node-RED web page.
+
+## Hardware
+1. Wemos d1 mini
+2. Wemos shield DHT22
+3. Wemos OLED shield (V2.0.0)
+4. Relè
+
+## Software
+### Libraries
+1. Adafruit_GFX.h
+2. Adafruit_SSD1306.h
+3. DHT.h
+4. ESP8266WiFi.h
+5. PubSubClient.h
+6. SPI.h
+7. Wire.h
+
+## Network diagram
+
+![Network Diagram](https://github.com/looCiprian/esp8266_dht22_oled_Node-RED/blob/master/images/network.png)
+
+## Preview
+### Oled display
+
+![Oled Display](https://github.com/looCiprian/esp8266_dht22_oled_Node-RED/blob/master/images/wemos_display.gif)
+
+### Node-RED dashboard
+
+![Home](https://github.com/looCiprian/esp8266_dht22_oled_Node-RED/blob/master/Node-RED/images/home.png)
+![Charts](https://github.com/looCiprian/esp8266_dht22_oled_Node-RED/blob/master/Node-RED/images/charts.png)
+![Control](https://github.com/looCiprian/esp8266_dht22_oled_Node-RED/blob/master/Node-RED/images/control.png)
+
