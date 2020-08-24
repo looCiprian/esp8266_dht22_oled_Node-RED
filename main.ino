@@ -1,4 +1,3 @@
-#include <TimeLib.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -69,6 +68,8 @@ int humidit_pos = 0;
 // Pixel massimo e minio in cui si può disegnare il grafico
 int data_max_display = 47;
 int data_min_display = 8;
+
+bool connectedToMQttServer = true;
 
 void setup()   {
 
@@ -299,15 +300,21 @@ void setup_wifi() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   display.println("Connecting to:");
-  display.setTextSize(2);
+  display.setTextSize(1);
   display.println(ssid);
   display.display();
 
   WiFi.begin(ssid, password);
 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+  int connectingAttemps = 0;
+  
+  while (WiFi.status() != WL_CONNECTED && connectingAttemps < 10 ) {
+    delay(1000);
     Serial.print(".");
+    connectingAttemps++;
+    Serial.println("");
+    Serial.print("Attempt wifi connection n: ");
+    Serial.println(connectingAttemps);
   }
 
   randomSeed(micros());
@@ -366,7 +373,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void reconnect() {
-  // Loop until we're reconnected
+  // Loop until we're reconnected or 10 attempt
   digitalWrite(rele_d1, LOW);
   display.clearDisplay();
   display.setTextSize(1);
@@ -378,7 +385,9 @@ void reconnect() {
   display.println(mqtt_server);
   display.display();
 
-  while (!client.connected()) {
+  int connectingAttemps = 0;
+
+  while (!client.connected()  && connectingAttemps < 10) {
     Serial.print("Attempting MQTT connection...");
     String clientId = "ESP8266Client-";
     clientId += String(random(0xffff), HEX);
@@ -386,15 +395,20 @@ void reconnect() {
       client.subscribe("tenda", 1);
       client.subscribe("clock", 1); //new
     } else {
-      delay(5000);
+      delay(1000);
     }
+    connectingAttemps++;
+    Serial.println("");
+    Serial.print("Attempt wifi connection n: ");
+    Serial.println(connectingAttemps);
   }
 }
 
 void loop() {
 
-  if (!client.connected()) {
+  if (!client.connected() && connectedToMQttServer) {
     reconnect();
+    connectedToMQttServer= false;
   }
   client.loop();
 
@@ -455,6 +469,4 @@ void loop() {
     }
 
   }
-
-
 }
