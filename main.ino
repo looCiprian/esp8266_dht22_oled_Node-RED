@@ -48,6 +48,8 @@ int startTime = 0;
 // Token per scegliere cosa visualizzare
 int roundToken = 0;
 
+// Check if display must be on or off
+bool isNight = false;
 
 #if (SSD1306_LCDHEIGHT != 48)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
@@ -135,104 +137,145 @@ void setup()   {
 }
 
 void displayTime() {
-  // Stampo temperatura
+
   display.clearDisplay();
-  display.drawRoundRect(0, 0, OLED_WIDTH, OLED_HEIGHT, 8, WHITE);
-  display.setCursor(18, 10);
-  display.setTextSize(1);
-  display.println("Time:");
-  display.setCursor(4, OLED_HEIGHT / 2);
-  display.setTextSize(2);
-  display.println(time_server);
-  display.display();
+  // If is night do not display anything
+  if (!isNight) {
+    // Stampo l'ora
+    display.drawRoundRect(0, 0, OLED_WIDTH, OLED_HEIGHT, 8, WHITE);
+    display.setCursor(18, 10);
+    display.setTextSize(1);
+    display.println("Time:");
+    display.setCursor(4, OLED_HEIGHT / 2);
+    display.setTextSize(2);
+    display.println(time_server);
+    display.display();
+
+  }else{
+    display.fillScreen(BLACK);
+    display.display();
+  }
 
 }
 
 void displayTemp() {
-  // Stampo temperatura
-  display.clearDisplay();
-  display.drawRoundRect(0, 0, OLED_WIDTH, OLED_HEIGHT, 8, WHITE);
-  display.setCursor(19, 10);
-  display.setTextSize(1);
-  display.println("Temp:");
-  display.setCursor(4, OLED_HEIGHT / 2);
-  display.setTextSize(2);
-  display.println(temp);
-  display.display();
 
+  display.clearDisplay();
+  // If is night do not display anything
+  if (!isNight) {
+    // Stampo temperatura
+    display.drawRoundRect(0, 0, OLED_WIDTH, OLED_HEIGHT, 8, WHITE);
+    display.setCursor(19, 10);
+    display.setTextSize(1);
+    display.println("Temp:");
+    display.setCursor(4, OLED_HEIGHT / 2);
+    display.setTextSize(2);
+    display.println(temp);
+    display.display();
+  }else{
+    display.fillScreen(BLACK); 
+    display.display();
+  }
 }
 
 void displayHum() {
-  // Stampo umidità
+
   display.clearDisplay();
-  display.drawRoundRect(0, 0, OLED_WIDTH, OLED_HEIGHT, 8, WHITE);
-  display.setCursor(22, 10);
-  display.setTextSize(1);
-  display.println("Hum:");
-  display.setCursor(4, OLED_HEIGHT / 2);
-  display.setTextSize(2);
-  display.println(hum);
-  display.display();
+  // If is night do not display anything
+  if (!isNight) {
+    // Stampo umidità
+    display.drawRoundRect(0, 0, OLED_WIDTH, OLED_HEIGHT, 8, WHITE);
+    display.setCursor(22, 10);
+    display.setTextSize(1);
+    display.println("Hum:");
+    display.setCursor(4, OLED_HEIGHT / 2);
+    display.setTextSize(2);
+    display.println(hum);
+    display.display();
+  }else{
+    display.fillScreen(BLACK);
+    display.display(); 
+  }
 
 }
 
 void displayHeat() {
-  // Stampo temperatura percepita
+
   display.clearDisplay();
-  display.drawRoundRect(0, 0, OLED_WIDTH, OLED_HEIGHT, 8, WHITE);
-  display.setCursor(19, 10);
-  display.setTextSize(1);
-  display.println("Heat:");
-  display.setCursor(4, OLED_HEIGHT / 2);
-  display.setTextSize(2);
-  display.println(heat);
-  display.display();
+  // If is night do not display anything
+  if (!isNight) {
+    // Stampo temperatura percepita
+    display.drawRoundRect(0, 0, OLED_WIDTH, OLED_HEIGHT, 8, WHITE);
+    display.setCursor(19, 10);
+    display.setTextSize(1);
+    display.println("Heat:");
+    display.setCursor(4, OLED_HEIGHT / 2);
+    display.setTextSize(2);
+    display.println(heat);
+    display.display();
+  }else{
+    display.fillScreen(BLACK); 
+    display.display();
+  }
 }
 
 void displayGraphTemp() {
 
-  // Disegno grafico temperatura
   display.clearDisplay();
-  display.setCursor(0, 0);
-  display.setTextSize(1);
-  display.print("Temp graph");
-  // Aggiorno array temperatua
-  temperature[temperature_pos] = (int)t;
-  // Per la lunghezza dell'array stampo
-  for (int i = 0; i < 64; i++) {
-    // Mappo la temperatura e la inverto per il display
-    int temperature_display = map(temperature[i], 0, 40, data_max_display, data_min_display);
-    display.drawLine(i, temperature_display, i, data_max_display, WHITE);
+  // If is night do not display anything
+  if (!isNight) {
+    // Disegno grafico temperatura
+    display.setCursor(0, 0);
+    display.setTextSize(1);
+    display.print("Temp graph");
+    // Aggiorno array temperatua
+    temperature[temperature_pos] = (int)t;
+    // Per la lunghezza dell'array stampo
+    for (int i = 0; i < 64; i++) {
+      // Mappo la temperatura e la inverto per il display
+      int temperature_display = map(temperature[i], 0, 40, data_max_display, data_min_display);
+      display.drawLine(i, temperature_display, i, data_max_display, WHITE);
+    }
+    temperature_pos++;
+    // Array circolare
+    if (temperature_pos > 63) {
+      temperature_pos = 0;
+    }
+    display.display();
+  }else{
+    display.fillScreen(BLACK);
+    display.display(); 
   }
-  temperature_pos++;
-  // Array circolare
-  if (temperature_pos > 63) {
-    temperature_pos = 0;
-  }
-  display.display();
 }
 
 void displayGraphHum() {
-  // Disegno grafico umidità
+
   display.clearDisplay();
-  display.setCursor(0, 0);
-  display.setTextSize(1);
-  display.print("Hum graph");
-  // Aggiorno array umidità
-  humidit[humidit_pos] = (int)h;
-  // Per la lunghezza dell'array stampo
-  for (int i = 0; i < 64; i++) {
-    // Mappo l'umidità e la inverto per il display
-    int humidit_display = map(humidit[i], 0, 100, data_max_display, data_min_display);
-    display.drawLine(i, humidit_display, i, data_max_display, WHITE);
-    //display.drawPixel(i,humidit_display,WHITE);
+  // If is night do not display anything
+  if (!isNight) {
+    // Disegno grafico umidità
+    display.setCursor(0, 0);
+    display.setTextSize(1);
+    display.print("Hum graph");
+    // Aggiorno array umidità
+    humidit[humidit_pos] = (int)h;
+    // Per la lunghezza dell'array stampo
+    for (int i = 0; i < 64; i++) {
+      // Mappo l'umidità e la inverto per il display
+      int humidit_display = map(humidit[i], 0, 100, data_max_display, data_min_display);
+      display.drawLine(i, humidit_display, i, data_max_display, WHITE);
+      //display.drawPixel(i,humidit_display,WHITE);
+    }
+    humidit_pos++;
+    // Array circolare
+    if (humidit_pos > 63) {
+      humidit_pos = 0;
+    }
+    display.display();
+  }else{
+    display.fillScreen(BLACK);
+    display.display(); 
   }
-  humidit_pos++;
-  // Array circolare
-  if (humidit_pos > 63) {
-    humidit_pos = 0;
-  }
-  display.display();
 }
 
 void checkRele() {
@@ -307,7 +350,7 @@ void setup_wifi() {
   WiFi.begin(ssid, password);
 
   int connectingAttemps = 0;
-  
+
   while (WiFi.status() != WL_CONNECTED && connectingAttemps < 10 ) {
     delay(1000);
     Serial.print(".");
@@ -342,34 +385,41 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("] ");
   /*for (int i = 0; i < length; i++) {
     Serial.println((char)payload[i]);
-  }*/
+    }*/
   //  String payload_str = String((char*)payload);
   //  Serial.println(payload_str);
   String compare_topic(topic);
-  
-  if(compare_topic == "tenda"){
+
+  if (compare_topic == "tenda") {
     if ((char)payload[0] == '0') {
       digitalWrite(rele_d1, LOW);
     } else if ((char)payload[0] == '1') {
       digitalWrite(rele_d1, HIGH);
     }
     else {
-      Serial.print("rele low 6");    
+      Serial.print("rele low 6");
       digitalWrite(rele_d1, LOW);
     }
   }
-  
-  if(compare_topic == "clock"){
+
+  if (compare_topic == "clock") {
     String payload_str = String((char*)payload);
     Serial.print("Time: ");
     // prendo i primi 5 caratteri perchè dopo ci sono byte strani
-    payload_str = payload_str.substring(0,5);
-    Serial.println(payload_str);    
+    payload_str = payload_str.substring(0, 5);
+    Serial.println(payload_str);
     time_server = payload_str;
   }
 
+  if (compare_topic == "isNight") {
+    if ((char)payload[0] == '0') {
+      isNight = true;
+    }
+    else {
+      isNight = false;
+    }
+  }
 
-  
 }
 
 void reconnect() {
@@ -394,6 +444,7 @@ void reconnect() {
     if (client.connect(clientId.c_str())) {
       client.subscribe("tenda", 1);
       client.subscribe("clock", 1); //new
+      client.subscribe("isNight", 1);
     } else {
       delay(1000);
     }
@@ -408,7 +459,7 @@ void loop() {
 
   if (!client.connected() && connectedToMQttServer) {
     reconnect();
-    connectedToMQttServer= false;
+    connectedToMQttServer = false;
   }
   client.loop();
 
@@ -462,11 +513,10 @@ void loop() {
         roundToken = 5;
         break;
       case 5:
-        displayTime();     
+        displayTime();
         startTime = loopTime;
         roundToken = 0;
         break;
     }
-
   }
 }
