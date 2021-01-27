@@ -5,9 +5,11 @@
 #include "DHT.h"
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include <WiFiManager.h>   
+
+WiFiManager wifiManager;
 
 int rele_d1 = D8;   // Digital pin connected to the rele_d1 D1
-
 
 #define DHTPIN 2     // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
@@ -21,10 +23,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define OLED_HEIGHT 48
 #define OLED_WIDTH  64
 
-/* Set these to your desired credentials. */
-const char* ssid = "ssid";
-const char* password = "password";
-const char* mqtt_server = "mqtt_server_ip";
+const char* mqtt_server = "192.168.1.11";
 WiFiClient sensore1;
 PubSubClient client(sensore1);
 
@@ -334,32 +333,21 @@ void setup_wifi() {
   delay(10);
   // We start by connecting to a WiFi network
   Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
+  Serial.println("Connecting to wifi");
 
   display.clearDisplay();
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  display.println("Connecting to:");
+  display.println("Connecting to");
   display.setTextSize(1);
-  display.println(ssid);
+  display.println("Wifi network");
   display.display();
 
-  WiFi.begin(ssid, password);
+  wifiManager.autoConnect("Wemos-temperature");
 
-  int connectingAttemps = 0;
-
-  while (WiFi.status() != WL_CONNECTED && connectingAttemps < 10 ) {
-    delay(1000);
-    Serial.print(".");
-    connectingAttemps++;
-    Serial.println("");
-    Serial.print("Attempt wifi connection n: ");
-    Serial.println(connectingAttemps);
-  }
-
+  
   randomSeed(micros());
 
   Serial.println("");
