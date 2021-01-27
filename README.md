@@ -13,9 +13,10 @@ A program to display temperature, humidity, heat temperature, temperature graph 
 2. Adafruit_SSD1306.h
 3. DHT.h
 4. ESP8266WiFi.h
-5. PubSubClient.h
+5. PubSubClient.h (Change the mqtt server ip in the main.ino code as for Node-RED/flows.json)
 6. SPI.h
 7. Wire.h
+8. WiFiManager.h (For the first use connect to "Wemos-temperature" wifi and browse 192.168.4.1 in order to set your home ssid and password)
 
 ## Network diagram
 
